@@ -28,7 +28,7 @@ X = df[features]
 college_names = df['College']
 
 # Train the KNN model
-knn = NearestNeighbors(n_neighbors=3, algorithm='auto')
+knn = NearestNeighbors(n_neighbors=1, algorithm='auto')
 knn.fit(X)
 
 # Convert inputs
@@ -41,7 +41,7 @@ def convert_fees(fee):
             return 80000
         return 150000
     except ValueError:
-        fee = fee.lower()
+        fee = str(fee).lower()
         return 40000 if fee == "low" else 80000 if fee == "medium" else 150000
 
 def convert_rating(rating, thresholds=(2.5, 4.0, 4.8)):
@@ -53,7 +53,7 @@ def convert_rating(rating, thresholds=(2.5, 4.0, 4.8)):
             return thresholds[1]
         return thresholds[2]
     except ValueError:
-        rating = rating.lower()
+        rating = str(rating).lower()
         return thresholds[0] if rating == "low" else thresholds[1] if rating == "medium" else thresholds[2]
 
 @app.route('/')
@@ -61,54 +61,24 @@ def home():
     return jsonify({"message": "College Recommendation API is running!"})
 
 @app.route('/recommend', methods=['POST'])
-
 def recommend():
-
     data = request.get_json()
 
-
-
     # Extract and convert inputs
-
     fees = convert_fees(data.get('fees'))
-
-    hostel = 1 if data.get('hostel') == 'true' else 0
-
-    placement = convert_rating(data.get('placement'))
-
-    overall = convert_rating(data.get('overall'))
-
+    hostel = 1 if str(data.get('hostel')).lower() == 'true' else 0
+    placement = convert_rating(data.get('placement_rating'))
+    overall = convert_rating(data.get('overall_rating'))
     college_type = data.get('type', '').lower().strip()
-
     location = data.get('location', '').lower().strip()
 
-
-
     # Validate type and location
-
     if college_type not in le_type.classes_ or location not in le_location.classes_:
-
         return jsonify({
-
             "error": "Invalid type or location",
-
             "valid_types": le_type.classes_.tolist(),
-
             "valid_locations": le_location.classes_.tolist()
-
         }), 400
-
-
-
-    # (Your model prediction logic here — example below)
-
-    # Just sending a dummy college for now:
-
-    return jsonify({
-
-        "college": "Model College of Engineering"
-
-    })
 
     # Encode type and location
     type_encoded = le_type.transform([college_type])[0]
