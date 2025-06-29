@@ -2,95 +2,67 @@ from flask import Flask, request, jsonify
 import pandas as pd
 from sklearn.neighbors import NearestNeighbors
 from sklearn.preprocessing import LabelEncoder
-import os
 
 app = Flask(__name__)
 
-# Load and preprocess the data
-df = pd.read_csv("cleaned_college_data.csv")
-
-# Encode categorical features
-le_type = LabelEncoder()
-le_location = LabelEncoder()
-
-df['Type_cleaned'] = df['Type'].str.lower().str.strip()
-df['Location_cleaned'] = df['Location'].str.lower().str.strip()
-
-le_type.fit(df['Type_cleaned'])
-le_location.fit(df['Location_cleaned'])
-
-df['Type_encoded'] = le_type.transform(df['Type_cleaned'])
-df['Location_encoded'] = le_location.transform(df['Location_cleaned'])
-
-# Feature set
-features = ['Fees(aprox)', 'Hostel', 'Placement', 'Overall', 'Type_encoded', 'Location_encoded']
-X = df[features]
-college_names = df['College']
-
-# Train the KNN model
-knn = NearestNeighbors(n_neighbors=1, algorithm='auto')
-knn.fit(X)
-
-# Convert inputs
-def convert_fees(fee):
-    try:
-        fee = float(fee)
-        if fee <= 40000:
-            return 40000
-        elif fee <= 80000:
-            return 80000
-        return 150000
-    except ValueError:
-        fee = str(fee).lower()
-        return 40000 if fee == "low" else 80000 if fee == "medium" else 150000
-
-def convert_rating(rating, thresholds=(2.5, 4.0, 4.8)):
-    try:
-        rating = float(rating)
-        if rating < thresholds[0]:
-            return thresholds[0]
-        elif rating < thresholds[1]:
-            return thresholds[1]
-        return thresholds[2]
-    except ValueError:
-        rating = str(rating).lower()
-        return thresholds[0] if rating == "low" else thresholds[1] if rating == "medium" else thresholds[2]
-
-@app.route('/')
-def home():
-    return jsonify({"message": "College Recommendation API is running!"})
-
-@app.route('/recommend', methods=['POST'])
-def recommend():
+@app.route("/recommend", methods=["POST"])
+def recommend_college():
     data = request.get_json()
 
-    # Extract and convert inputs
-    fees = convert_fees(data.get('fees'))
-    hostel = 1 if str(data.get('hostel')).lower() == 'true' else 0
-    placement = convert_rating(data.get('placement_rating'))
-    overall = convert_rating(data.get('overall_rating'))
-    college_type = data.get('type', '').lower().strip()
-    location = data.get('location', '').lower().strip()
+    # Normalize inputs
+    fees_map = {"low": 40000, "medium": 70000, "high": 100000}
+    rating_ranges = {
+        "low": (0, 3.0),
+        "medium": (3.0, 4.5),
+        "high": (4.5, 5.0)
+    }
 
-    # Validate type and location
-    if college_type not in le_type.classes_ or location not in le_location.classes_:
-        return jsonify({
-            "error": "Invalid type or location",
-            "valid_types": le_type.classes_.tolist(),
-            "valid_locations": le_location.classes_.tolist()
-        }), 400
+    fees_value = fees_map.get(data["fees"].lower(), 70000)
+    placement_range = rating_ranges.get(data["placement_rating"].lower(), (3.0, 4.5))
+    overall_range = rating_ranges.get(data["overall_rating"].lower(), (3.0, 4.5))
+    hostel = 1 if data["hostel"] else 0
 
-    # Encode type and location
-    type_encoded = le_type.transform([college_type])[0]
-    location_encoded = le_location.transform([location])[0]
+    user_type = data["type"].strip().lower()
+    user_location = data["location"].strip().lower()
 
-    preferences = [fees, hostel, placement, overall, type_encoded, location_encoded]
+    # Load and preprocess the dataset
+    df = pd.read_csv("cleaned_college_data.csv")
+    df['Type'] = df['Type'].str.strip().str.lower()
+    df['Location'] = df['Location'].str.strip().str.lower()
 
-    # Get recommendations
-    distances, indices = knn.kneighbors([preferences])
-    recommendations = college_names.iloc[indices[0]].tolist()
+    # Filter by location and rating ranges
+    df_filtered = df[
+        (df['Location'] == user_location) &
+        (df['Placement Rating'] >= placement_range[0]) &
+        (df['Placement Rating'] <= placement_range[1]) &
+        (df['Overall Rating'] >= overall_range[0]) &
+        (df['Overall Rating'] <= overall_range[1])
+    ]
 
-    return jsonify({"recommendations": recommendations})
+    if df_filtered.empty:
+        return jsonify({"error": "No colleges found matching your criteria"}), 404
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.getenv('PORT', 10000)), debug=False, use_reloader=False)
+    # Encode type
+    le_type = LabelEncoder()
+    df_filtered['Type_encoded'] = le_type.fit_transform(df_filtered['Type'])
+    user_type_encoded = le_type.transform([user_type])[0]
+
+    # Create feature matrix
+    X = df_filtered[["Fees", "Hostel", "Placement Rating", "Overall Rating", "Type_encoded"]]
+    knn = NearestNeighbors(n_neighbors=1)
+    knn.fit(X)
+
+    user_vector = [[fees_value, hostel, 
+                    sum(placement_range)/2,  # Use mid-point of range for comparison
+                    sum(overall_range)/2,
+                    user_type_encoded]]
+
+    distances, indices = knn.kneighbors(user_vector)
+
+    recommended_index = indices[0][0]
+    recommended_college = df_filtered.iloc[recommended_index]["College Name"]
+
+    return jsonify({"recommendations": [recommended_college]})
+
+if __name__ == "__main__":
+    app.run(debug=True)
