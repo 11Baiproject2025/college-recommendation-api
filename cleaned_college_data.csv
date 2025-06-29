@@ -1,30 +1,30 @@
 College,Location,Type,Fees(aprox),Hostel,Placement,Overall
 Trinity College of Engineering,Thiruvananthapuram ,Private,90000,1,3.6,4
-Government Engineering College,Idukki,Govt,35000,1,3.5,4
-College of Engineering Trivandrum (CET),Thiruvananthapuram ,Govt,35000,1,4.3,4.4
-Government Engineering College Thrissur (GECT),Thrissur,Govt,35000,1,4.2,4.4
-Government College of Engineering Kannur (GCEK),Kannur,Govt,35000,1,3.5,4.1
-Rajiv Gandhi Institute of Technology (RIT),Kottayam,Govt,35000,1,3.9,4.3
-MG University,Kottayam,Govt,400000,0,3.8,4.1
-Model Engineering College (MEC),"Thrikkakara, Kochi",Private,35000,0,4.5,3.3
+Government Engineering College,Idukki,Government,35000,1,3.5,4
+College of Engineering Trivandrum (CET),Thiruvananthapuram ,Government,35000,1,4.3,4.4
+Government Engineering College Thrissur (GECT),Thrissur,Government,35000,1,4.2,4.4
+Government College of Engineering Kannur (GCEK),Kannur,Government,35000,1,3.5,4.1
+Rajiv Gandhi Institute of Technology (RIT),Kottayam,Government,35000,1,3.9,4.3
+MG University,Kottayam,Government,400000,0,3.8,4.1
+Model Engineering College (MEC),Ernakulam,Private,35000,0,4.5,3.3
 KMCT College of Engineering,Kozhikode,Private,75000,1,2.6,4.2
-Sree Chitra Thirunal College of Engineering (SCTCE),thiruvananthapuram ,Govt,35000,0,4.1,3.9
-Rajagiri School of Engineering & Technology (RSET),Kochi,Private,75000,1,4.1,4.2
+Sree Chitra Thirunal College of Engineering (SCTCE),Thiruvananthapuram ,Government,35000,0,4.1,3.9
+Rajagiri School of Engineering & Technology (RSET),Ernakulam,Private,75000,1,4.1,4.2
 Federal Institute of Science and Technology (FISAT),Ernakulam,Private,75000,1,4,3.9
 Saintgits College of Engineering,Kottayam,Private,75000,1,4.7,4.2
-TKM College of Engineering,kollam,Private,35000,1,3.9,4.2
-NSS College of Engineering,palakad ,Govt,35000,1,4,4.2
-Government Engineering College Barton Hill (GECB),Thiruvananthapuram ,Govt,35000,0,3.7,4.1
-LBS Institute of Technology for Women (LBSITW),Thiruvananthapuram ,Govt,35000,1,4.3,4.2
+TKM College of Engineering,Kollam,Private,35000,1,3.9,4.2
+NSS College of Engineering,Palakad ,Government,35000,1,4,4.2
+Government Engineering College Barton Hill (GECB),Thiruvananthapuram ,Government,35000,0,3.7,4.1
+LBS Institute of Technology for Women (LBSITW),Thiruvananthapuram ,Government,35000,1,4.3,4.2
 SCMS school of engineering and technology ,Ernakulam ,Private ,75000,1,3.5,3.8
 Muthoot institute of technology and science (MITS),Ernakulam ,Private ,75000,1,4,3.9
-College of engineering Trivandrum(CET),Thiruvananthapuram ,Govt,34600,1,4.3,4.4
-Government Engineering College(GEC),Thrissur,Govt,35930,1,4.2,4.4
-Cochin University of Science and Technology (CUSAT),Kochi,Govt,71680,1,3.9,4
+College of engineering Trivandrum(CET),Thiruvananthapuram ,Government,34600,1,4.3,4.4
+Government Engineering College(GEC),Thrissur,Government,35930,1,4.2,4.4
+Cochin University of Science and Technology (CUSAT),Ernakulam,Government,71680,1,3.9,4
 Rajadhani Institute of Engineering and Technology (RIET),Thiruvananthapuram ,Private,80000,1,3.2,3.9
 Adi Shankara Institute of Engineering and Technology (ASIET),Ernakulam,Private,75000,1,3.5,3.7
 Christ College of Engineering,Thrissur,Private,110500,1,4.2,3.9
 Musaliar College of Engineering and Technology,Pathanamthitta,Private,502000,1,3.9,4.1
-Mar Athanasius College of Engineering (MACE),Ernakulam,Govt,55000,1,4,4.2
-Cochin University College of Engineering Kuttanad (CUCEK),Alappuzha,Govt,88890,1,3.5,3.5
+Mar Athanasius College of Engineering (MACE),Ernakulam,Government,55000,1,4,4.2
+Cochin University College of Engineering Kuttanad (CUCEK),Alappuzha,Government,88890,1,3.5,3.5
 Sri Vellappally Natesan College of Engineering (SVNCE),Alappuzha,Private,180000,1,3.5,3.5
